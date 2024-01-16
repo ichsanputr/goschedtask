@@ -3,26 +3,20 @@ package goschedtask
 import (
 	"fmt"
 	"testing"
-	"time"
 )
 
 func Test(t *testing.T) {
-	RegisterJob(Job{
-		JobFunc: func() {
-			fmt.Println("Task first")
-		},
-		RunLoop:  true,
-		Interval: Second(4),
-	})
+	RegisterJob(func() {
+		fmt.Println("Task third")
+	}, Second(3))
 
-	RegisterJob(Job{
-		JobFunc: func() {
-			time.Sleep(2 * time.Second)
-			fmt.Println("Task second")
-		},
-		RunLoop:  true,
-		Interval: Second(8),
-	})
+	RegisterJobRunOnce(func() {
+		fmt.Println("Task first")
+	}, Second(3))
+
+	RegisterJobRunOnce(func() {
+		fmt.Println("Task second")
+	}, Second(10))
 
 	goschedtask := RunJobs()
 	<-goschedtask

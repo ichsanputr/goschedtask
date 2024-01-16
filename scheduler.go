@@ -3,6 +3,8 @@ package goschedtask
 import (
 	"reflect"
 	"time"
+
+	"golang.org/x/exp/slices"
 )
 
 type Scheduler struct {
@@ -34,13 +36,23 @@ func (Sched Scheduler) RunJobs() chan bool {
 	return stopped
 }
 
-func (Sched Scheduler) RunPendingJobs() {
+func (Sched *Scheduler) RunPendingJobs() {
 	for i, j := range Sched.Jobs {
+		if j.MustDeleted {
+			Sched.Jobs = slices.Delete(Sched.Jobs, i, i+1)
+			break
+		}
+
 		if ShouldRun(j.TimeRun) {
 			go reflect.ValueOf(j.JobFunc).Call(nil)
 			Sched.Jobs[i].TimeRun = Sched.Jobs[i].TimeRun.Add(Sched.Jobs[i].Interval)
+
+			if !j.RunLoop {
+				Sched.Jobs[i].MustDeleted = true
+			}
 		}
 	}
+
 }
 
 func (Sched Scheduler) SetFirstTimeRun() {
