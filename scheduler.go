@@ -40,7 +40,7 @@ func (Sched *Scheduler) RunPendingJobs() {
 	for i, j := range Sched.Jobs {
 		if j.MustDeleted {
 			Sched.Jobs = slices.Delete(Sched.Jobs, i, i+1)
-			break
+			continue
 		}
 
 		if ShouldRun(j.TimeRun) {
