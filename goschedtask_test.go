@@ -25,7 +25,7 @@ func TaskHttpReq(url string) {
 
 func Test(t *testing.T) {
 	RegisterJobRunAt(TaskHttpReq, time.Now().Add(time.Second*2), "https://www.google.com")
-	RegisterJob(TaskTimeout, Second(2), "Task FuncTimeout running", "kakas")
+	RegisterJob(TaskTimeout, Second(2), "Task FuncTimeout running")
 	RegisterJobRunOnce(TaskTimeout, Second(4), "Task Hai")
 
 	<-RunJobs()
