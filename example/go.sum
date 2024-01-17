@@ -1,0 +1,4 @@
+github.com/ichsanputr/goschedtask v0.0.0-20240117105423-2afce7f86c85 h1:7KZwkyeTXbPsRCETIHu/kzF6CNUnk1g8Zt0sfMTtUbM=
+github.com/ichsanputr/goschedtask v0.0.0-20240117105423-2afce7f86c85/go.mod h1:2JkydzUzTfBPML9+hd6H3+qFnihOGOKsWQy/nKEk+i4=
+golang.org/x/exp v0.0.0-20240112132812-db7319d0e0e3 h1:hNQpMuAJe5CtcUqCXaWga3FHu+kQvCqcsoVaQgSV60o=
+golang.org/x/exp v0.0.0-20240112132812-db7319d0e0e3/go.mod h1:idGWGoKP1toJGkd5/ig9ZLuPcZBC3ewk7SzmH0uou08=

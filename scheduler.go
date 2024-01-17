@@ -78,11 +78,12 @@ func ShouldRun(t time.Time) bool {
 }
 
 func RunJobWithParam(jobFunc interface{}, params []interface{}) {
+	j := reflect.ValueOf(jobFunc)
 	in := make([]reflect.Value, len(params))
 	for k, param := range params {
 		in[k] = reflect.ValueOf(param)
 	}
-	reflect.ValueOf(jobFunc).Call(in)
+	j.Call(in)
 }
 
 func RunJobs() chan bool {

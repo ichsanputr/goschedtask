@@ -1,6 +1,10 @@
 package goschedtask
 
-import "time"
+import (
+	"errors"
+	"reflect"
+	"time"
+)
 
 type Job struct {
 	JobFunc     interface{}
@@ -16,6 +20,10 @@ var (
 )
 
 func RegisterJob(jobFunc interface{}, interval time.Duration, jobParams ...interface{}) {
+	if err := JobParamsChecking(jobFunc, jobParams); err != nil {
+		panic(err)
+	}
+
 	job := Job{
 		JobFunc:     jobFunc,
 		JobParams:   jobParams,
@@ -24,10 +32,15 @@ func RegisterJob(jobFunc interface{}, interval time.Duration, jobParams ...inter
 		TimeRun:     time.Time{},
 		MustDeleted: false,
 	}
+
 	Jobs = append(Jobs, job)
 }
 
 func RegisterJobRunOnce(jobFunc interface{}, interval time.Duration, jobParams ...interface{}) {
+	if err := JobParamsChecking(jobFunc, jobParams); err != nil {
+		panic(err)
+	}
+
 	job := Job{
 		JobFunc:     jobFunc,
 		JobParams:   jobParams,
@@ -40,6 +53,10 @@ func RegisterJobRunOnce(jobFunc interface{}, interval time.Duration, jobParams .
 }
 
 func RegisterJobRunAt(jobFunc interface{}, timeRun time.Time, jobParams ...interface{}) {
+	if err := JobParamsChecking(jobFunc, jobParams); err != nil {
+		panic(err)
+	}
+
 	job := Job{
 		JobFunc:     jobFunc,
 		JobParams:   jobParams,
@@ -48,4 +65,12 @@ func RegisterJobRunAt(jobFunc interface{}, timeRun time.Time, jobParams ...inter
 		MustDeleted: false,
 	}
 	Jobs = append(Jobs, job)
+}
+
+func JobParamsChecking(jobFunc interface{}, jobParams []interface{}) error {
+	if len(jobParams) != reflect.ValueOf(jobFunc).Type().NumIn() {
+		return errors.New("the number of job function params is not the same as the function")
+	}
+
+	return nil
 }

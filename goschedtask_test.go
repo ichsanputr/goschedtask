@@ -8,8 +8,8 @@ import (
 	"time"
 )
 
-func TaskTimeout() {
-	fmt.Println("Task FuncTimeout running")
+func TaskTimeout(msg string) {
+	fmt.Println(msg)
 }
 
 func TaskHttpReq(url string) {
@@ -24,8 +24,9 @@ func TaskHttpReq(url string) {
 }
 
 func Test(t *testing.T) {
-	RegisterJobRunAt(TaskHttpReq, time.Now().Add(time.Second*10), "https://www.google.com")
-	RegisterJob(TaskTimeout, Second(2))
+	RegisterJobRunAt(TaskHttpReq, time.Now().Add(time.Second*2), "https://www.google.com")
+	RegisterJob(TaskTimeout, Second(2), "Task FuncTimeout running", "kakas")
+	RegisterJob(TaskTimeout, Second(2), "Task wkwk")
 
 	<-RunJobs()
 }
