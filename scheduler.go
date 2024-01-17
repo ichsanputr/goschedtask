@@ -1,6 +1,7 @@
 package goschedtask
 
 import (
+	"fmt"
 	"reflect"
 	"time"
 
@@ -26,6 +27,7 @@ func (Sched Scheduler) RunJobs() chan bool {
 		for {
 			select {
 			case <-tick.C:
+				fmt.Println("Kaka")
 				mainScheduler.RunPendingJobs()
 			case <-stopped:
 				return
@@ -44,7 +46,7 @@ func (Sched *Scheduler) RunPendingJobs() {
 		}
 
 		if ShouldRun(j.TimeRun) {
-			go reflect.ValueOf(j.JobFunc).Call(nil)
+			go RunJobWithParam(j.JobFunc, j.JobParams)
 			Sched.Jobs[i].TimeRun = Sched.Jobs[i].TimeRun.Add(Sched.Jobs[i].Interval)
 
 			if !j.RunLoop {
@@ -73,6 +75,14 @@ func ShouldRun(t time.Time) bool {
 	}
 
 	return false
+}
+
+func RunJobWithParam(jobFunc interface{}, params []interface{}) {
+	in := make([]reflect.Value, len(params))
+	for k, param := range params {
+		in[k] = reflect.ValueOf(param)
+	}
+	reflect.ValueOf(jobFunc).Call(in)
 }
 
 func RunJobs() chan bool {

@@ -4,6 +4,7 @@ import "time"
 
 type Job struct {
 	JobFunc     interface{}
+	JobParams   []interface{}
 	RunLoop     bool
 	Interval    time.Duration
 	TimeRun     time.Time
@@ -14,9 +15,10 @@ var (
 	Jobs = []Job{}
 )
 
-func RegisterJob(jobFunc interface{}, interval time.Duration) {
+func RegisterJob(jobFunc interface{}, interval time.Duration, jobParams ...interface{}) {
 	job := Job{
 		JobFunc:     jobFunc,
+		JobParams:   jobParams,
 		RunLoop:     true,
 		Interval:    interval,
 		TimeRun:     time.Time{},
@@ -25,9 +27,10 @@ func RegisterJob(jobFunc interface{}, interval time.Duration) {
 	Jobs = append(Jobs, job)
 }
 
-func RegisterJobRunOnce(jobFunc interface{}, interval time.Duration) {
+func RegisterJobRunOnce(jobFunc interface{}, interval time.Duration, jobParams ...interface{}) {
 	job := Job{
 		JobFunc:     jobFunc,
+		JobParams:   jobParams,
 		RunLoop:     false,
 		Interval:    interval,
 		TimeRun:     time.Time{},
