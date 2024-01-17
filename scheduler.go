@@ -1,7 +1,6 @@
 package goschedtask
 
 import (
-	"fmt"
 	"reflect"
 	"time"
 
@@ -27,7 +26,6 @@ func (Sched Scheduler) RunJobs() chan bool {
 		for {
 			select {
 			case <-tick.C:
-				fmt.Println("Kaka")
 				mainScheduler.RunPendingJobs()
 			case <-stopped:
 				return
@@ -59,7 +57,9 @@ func (Sched *Scheduler) RunPendingJobs() {
 
 func (Sched Scheduler) SetFirstTimeRun() {
 	for i, j := range Sched.Jobs {
-		Sched.Jobs[i].TimeRun = time.Now().Add(j.Interval)
+		if j.Interval.Seconds() != 0 {
+			Sched.Jobs[i].TimeRun = time.Now().Add(j.Interval)
+		}
 	}
 }
 

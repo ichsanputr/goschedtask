@@ -38,3 +38,14 @@ func RegisterJobRunOnce(jobFunc interface{}, interval time.Duration, jobParams .
 	}
 	Jobs = append(Jobs, job)
 }
+
+func RegisterJobRunAt(jobFunc interface{}, timeRun time.Time, jobParams ...interface{}) {
+	job := Job{
+		JobFunc:     jobFunc,
+		JobParams:   jobParams,
+		RunLoop:     false,
+		TimeRun:     timeRun,
+		MustDeleted: false,
+	}
+	Jobs = append(Jobs, job)
+}

@@ -2,6 +2,7 @@ package goschedtask
 
 import (
 	"fmt"
+	"log"
 	"net/http"
 	"testing"
 	"time"
@@ -9,23 +10,22 @@ import (
 
 func TaskTimeout() {
 	fmt.Println("Task FuncTimeout running")
-	time.Sleep(3 * time.Second)
-	fmt.Println("Task Timeout finish")
 }
 
 func TaskHttpReq(url string) {
 	resp, err := http.Get(url)
+
 	if err != nil {
-		panic(err)
+		log.Println(err)
+		return
 	}
-	defer resp.Body.Close()
 
 	fmt.Printf("Task HttpReq with %d \n", resp.StatusCode)
 }
 
 func Test(t *testing.T) {
-	RegisterJob(TaskHttpReq, Second(5), "https://www.adsdgoogle.com")
+	RegisterJobRunAt(TaskHttpReq, time.Now().Add(time.Second*10), "https://www.google.com")
+	RegisterJob(TaskTimeout, Second(2))
 
-	goschedtask := RunJobs()
-	<-goschedtask
+	<-RunJobs()
 }
